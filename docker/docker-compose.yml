@@ -1,0 +1,21 @@
+services:
+  cliniccare-postgres:
+    image: postgres:17-alpine
+    container_name: cliniccare-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: cliniccare_db
+      POSTGRES_USER: cliniccare_user
+      POSTGRES_PASSWORD: cliniccare_password
+
+    ports:
+      - "5434:5432"
+
+    volumes:
+      - cliniccare_postgres_data:/var/lib/postgresql/data
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ../database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+
+volumes:
+  cliniccare_postgres_data:

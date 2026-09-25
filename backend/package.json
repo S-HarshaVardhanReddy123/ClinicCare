@@ -1,0 +1,21 @@
+{
+  "name": "cliniccare-backend",
+  "version": "1.0.0",
+  "description": "ClinicCare healthcare platform backend API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\""
+  },
+  "keywords": [
+    "cliniccare",
+    "healthcare",
+    "hospital",
+    "appointment",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
