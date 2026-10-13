@@ -1,0 +1,374 @@
+/* ============================================================
+   CLINICCARE - LOCATION PAGE
+   ============================================================ */
+
+.location-page {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 36px 40px 60px;
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.location-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+
+    margin-bottom: 30px;
+}
+
+.location-label {
+    margin-bottom: 8px;
+
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.location-header h1 {
+    margin: 0 0 10px;
+
+    color: #172033;
+    font-size: 34px;
+    line-height: 1.2;
+}
+
+.location-header p {
+    margin: 0;
+
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.location-header-icon {
+    width: 72px;
+    height: 72px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eaf2ff;
+    border-radius: 18px;
+
+    font-size: 34px;
+}
+
+
+/* ============================================================
+   LOCATION CARD
+   ============================================================ */
+
+.location-card {
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 8px 30px rgba(15, 23, 42, 0.06);
+}
+
+.location-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    margin-bottom: 28px;
+}
+
+.location-card-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eff6ff;
+    border-radius: 14px;
+
+    font-size: 25px;
+}
+
+.location-card-header h2 {
+    margin: 0 0 5px;
+
+    color: #172033;
+    font-size: 20px;
+}
+
+.location-card-header p {
+    margin: 0;
+
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+.location-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    margin-bottom: 24px;
+}
+
+.location-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.location-field label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.location-field select {
+    width: 100%;
+    height: 50px;
+
+    padding: 0 14px;
+
+    background: #ffffff;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+
+    color: #172033;
+    font-size: 14px;
+
+    outline: none;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.location-field select:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.location-field select:disabled {
+    background: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   BUTTON
+   ============================================================ */
+
+.location-button {
+    width: 100%;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.location-button:hover:not(:disabled) {
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+}
+
+.location-button:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.location-error {
+    margin-bottom: 20px;
+
+    padding: 14px 16px;
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+
+    color: #b91c1c;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   INFORMATION CARDS
+   ============================================================ */
+
+.location-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-top: 24px;
+}
+
+.location-info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+
+    padding: 22px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.04);
+}
+
+.info-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #eff6ff;
+    border-radius: 10px;
+
+    font-size: 20px;
+}
+
+.location-info-card h3 {
+    margin: 0 0 6px;
+
+    color: #172033;
+    font-size: 15px;
+}
+
+.location-info-card p {
+    margin: 0;
+
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.location-loading {
+    min-height: 500px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.location-loading-icon {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.location-loading h2 {
+    margin: 0 0 8px;
+
+    color: #172033;
+    font-size: 22px;
+}
+
+.location-loading p {
+    margin: 0;
+
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+    .location-info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .location-page {
+        padding: 25px 20px 40px;
+    }
+
+    .location-header {
+        align-items: flex-start;
+    }
+
+    .location-header h1 {
+        font-size: 28px;
+    }
+
+    .location-form {
+        grid-template-columns: 1fr;
+    }
+
+    .location-card {
+        padding: 22px;
+    }
+
+    .location-header-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 26px;
+    }
+}

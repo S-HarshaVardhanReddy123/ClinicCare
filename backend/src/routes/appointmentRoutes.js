@@ -2,6 +2,7 @@ const express = require("express");
 
 const {
     createAppointment,
+    getDoctorAvailability,
     getMyAppointments,
     getAppointmentById,
     getDoctorAppointments,
@@ -15,9 +16,10 @@ const router = express.Router();
 
 
 // ============================================================
-// PATIENT ROUTES
+// PATIENT APPOINTMENTS
 // ============================================================
 
+// Create appointment
 router.post(
     "/",
     authenticateToken,
@@ -25,6 +27,8 @@ router.post(
     createAppointment
 );
 
+
+// Get logged-in patient's appointments
 router.get(
     "/my",
     authenticateToken,
@@ -33,10 +37,20 @@ router.get(
 );
 
 
+// Get available slots for a doctor
+router.get(
+    "/doctor/:doctorId/availability",
+    authenticateToken,
+    authorizeRoles("PATIENT"),
+    getDoctorAvailability
+);
+
+
 // ============================================================
-// DOCTOR ROUTES
+// DOCTOR APPOINTMENTS
 // ============================================================
 
+// Get appointments belonging to logged-in doctor
 router.get(
     "/doctor",
     authenticateToken,
@@ -44,6 +58,8 @@ router.get(
     getDoctorAppointments
 );
 
+
+// Doctor accepts/rejects/completes appointment
 router.patch(
     "/doctor/:appointmentId/status",
     authenticateToken,
@@ -53,9 +69,10 @@ router.patch(
 
 
 // ============================================================
-// SHARED APPOINTMENT DETAILS
+// APPOINTMENT DETAILS
 // ============================================================
 
+// Patient / Doctor / Admin can view an authorized appointment
 router.get(
     "/:appointmentId",
     authenticateToken,

@@ -13,7 +13,7 @@ const createPayment = async (req, res) => {
     const client = await pool.connect();
 
     try {
-        const patientId = req.user.userId;
+        const patientId = req.user.id;
 
         const {
             appointmentId,
@@ -271,7 +271,7 @@ const createPayment = async (req, res) => {
 
 const getMyPayments = async (req, res) => {
     try {
-        const patientId = req.user.userId;
+        const patientId = req.user.id;
 
         const result = await pool.query(
             `
@@ -341,7 +341,7 @@ const getMyPayments = async (req, res) => {
 
 const getPaymentById = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.id;
         const userRole = req.user.role;
         const { paymentId } = req.params;
 

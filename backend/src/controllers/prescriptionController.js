@@ -13,7 +13,7 @@ const createPrescription = async (req, res) => {
     const client = await pool.connect();
 
     try {
-        const doctorUserId = req.user.userId;
+        const doctorUserId = req.user.id;
 
         const {
             appointmentId,
@@ -302,7 +302,7 @@ const createPrescription = async (req, res) => {
 
 const getMyPrescriptions = async (req, res) => {
     try {
-        const patientId = req.user.userId;
+        const patientId = req.user.id;
 
         const result = await pool.query(
             `
@@ -401,7 +401,7 @@ const getPrescriptionById = async (req, res) => {
     try {
         const { prescriptionId } = req.params;
 
-        const userId = req.user.userId;
+        const userId = req.user.id;
         const userRole = req.user.role;
 
         let query;
@@ -630,7 +630,7 @@ const getPrescriptionById = async (req, res) => {
 
 const getDoctorPrescriptions = async (req, res) => {
     try {
-        const doctorUserId = req.user.userId;
+        const doctorUserId = req.user.id;
 
         const result = await pool.query(
             `

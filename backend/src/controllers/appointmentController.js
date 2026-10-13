@@ -1,9 +1,5 @@
 const pool = require("../config/db");
 
-const {
-    createAppointmentNotification,
-} = require("../services/notificationService");
-
 
 // ============================================================
 // CREATE APPOINTMENT - PATIENT
@@ -13,7 +9,8 @@ const createAppointment = async (req, res) => {
     const client = await pool.connect();
 
     try {
-        const patientId = req.user.userId;
+        // JWT contains "id", not "userId"
+        const patientId = req.user.id;
 
         const {
             doctorId,
@@ -30,6 +27,10 @@ const createAppointment = async (req, res) => {
 
         await client.query("BEGIN");
 
+        // --------------------------------------------------------
+        // Check availability slot
+        // --------------------------------------------------------
+
         const availabilityResult = await client.query(
             `
             SELECT
@@ -44,7 +45,10 @@ const createAppointment = async (req, res) => {
               AND doctor_id = $2
             FOR UPDATE
             `,
-            [availabilityId, doctorId]
+            [
+                availabilityId,
+                doctorId,
+            ]
         );
 
         if (availabilityResult.rows.length === 0) {
@@ -58,6 +62,10 @@ const createAppointment = async (req, res) => {
 
         const availability = availabilityResult.rows[0];
 
+        // --------------------------------------------------------
+        // Make sure slot is still available
+        // --------------------------------------------------------
+
         if (!availability.is_available) {
             await client.query("ROLLBACK");
 
@@ -66,6 +74,10 @@ const createAppointment = async (req, res) => {
                 message: "This appointment slot is no longer available",
             });
         }
+
+        // --------------------------------------------------------
+        // Verify doctor
+        // --------------------------------------------------------
 
         const doctorResult = await client.query(
             `
@@ -90,6 +102,10 @@ const createAppointment = async (req, res) => {
         }
 
         const doctor = doctorResult.rows[0];
+
+        // --------------------------------------------------------
+        // Create appointment
+        // --------------------------------------------------------
 
         const appointmentResult = await client.query(
             `
@@ -136,10 +152,15 @@ const createAppointment = async (req, res) => {
             ]
         );
 
+        // --------------------------------------------------------
+        // Lock the availability slot
+        // --------------------------------------------------------
+
         await client.query(
             `
             UPDATE doctor_availability
-            SET is_available = FALSE
+            SET
+                is_available = FALSE
             WHERE id = $1
             `,
             [availabilityId]
@@ -156,6 +177,7 @@ const createAppointment = async (req, res) => {
     } catch (error) {
         await client.query("ROLLBACK");
 
+        // Unique constraint / duplicate appointment
         if (error.code === "23505") {
             return res.status(409).json({
                 success: false,
@@ -163,7 +185,10 @@ const createAppointment = async (req, res) => {
             });
         }
 
-        console.error("Create appointment error:", error);
+        console.error(
+            "Create appointment error:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
@@ -177,12 +202,97 @@ const createAppointment = async (req, res) => {
 
 
 // ============================================================
+// GET AVAILABLE SLOTS FOR A DOCTOR - PATIENT
+// ============================================================
+
+const getDoctorAvailability = async (req, res) => {
+    try {
+        const { doctorId } = req.params;
+
+        if (!doctorId) {
+            return res.status(400).json({
+                success: false,
+                message: "Doctor ID is required",
+            });
+        }
+
+        // --------------------------------------------------------
+        // Verify doctor
+        // --------------------------------------------------------
+
+        const doctorResult = await pool.query(
+            `
+            SELECT
+                id,
+                name,
+                specialization,
+                hospital_id
+            FROM doctors
+            WHERE id = $1
+              AND is_active = TRUE
+            `,
+            [doctorId]
+        );
+
+        if (doctorResult.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Doctor not found",
+            });
+        }
+
+        // --------------------------------------------------------
+        // Get available slots
+        // --------------------------------------------------------
+
+        const availabilityResult = await pool.query(
+            `
+            SELECT
+                id,
+                doctor_id,
+                available_date,
+                start_time,
+                end_time,
+                is_available
+            FROM doctor_availability
+            WHERE doctor_id = $1
+              AND is_available = TRUE
+              AND available_date >= CURRENT_DATE
+            ORDER BY
+                available_date ASC,
+                start_time ASC
+            `,
+            [doctorId]
+        );
+
+        return res.status(200).json({
+            success: true,
+            doctor: doctorResult.rows[0],
+            availability: availabilityResult.rows,
+        });
+
+    } catch (error) {
+        console.error(
+            "Get doctor availability error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch doctor availability",
+        });
+    }
+};
+
+
+// ============================================================
 // GET PATIENT APPOINTMENTS
 // ============================================================
 
 const getMyAppointments = async (req, res) => {
     try {
-        const patientId = req.user.userId;
+        // JWT contains "id"
+        const patientId = req.user.id;
 
         const result = await pool.query(
             `
@@ -194,10 +304,13 @@ const getMyAppointments = async (req, res) => {
                 a.status,
                 a.doctor_notes,
                 a.created_at,
+                a.updated_at,
 
                 d.id AS doctor_id,
                 d.name AS doctor_name,
+                d.qualification,
                 d.specialization,
+                d.consultation_fee,
 
                 h.id AS hospital_id,
                 h.name AS hospital_name,
@@ -215,7 +328,8 @@ const getMyAppointments = async (req, res) => {
 
             ORDER BY
                 a.appointment_date DESC,
-                a.appointment_time DESC
+                a.appointment_time DESC,
+                a.created_at DESC
             `,
             [patientId]
         );
@@ -225,9 +339,11 @@ const getMyAppointments = async (req, res) => {
             count: result.rows.length,
             appointments: result.rows,
         });
-
     } catch (error) {
-        console.error("Get patient appointments error:", error);
+        console.error(
+            "Get patient appointments error:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
@@ -235,20 +351,21 @@ const getMyAppointments = async (req, res) => {
         });
     }
 };
-
-
-// ============================================================
-// GET APPOINTMENT BY ID
-// ============================================================
-
 const getAppointmentById = async (req, res) => {
     try {
         const { appointmentId } = req.params;
-        const userId = req.user.userId;
+
+        // JWT contains "id"
+        const userId = req.user.id;
+
         const userRole = req.user.role;
 
         let query;
         let params;
+
+        // --------------------------------------------------------
+        // PATIENT
+        // --------------------------------------------------------
 
         if (userRole === "PATIENT") {
 
@@ -270,6 +387,7 @@ const getAppointmentById = async (req, res) => {
                     d.name AS doctor_name,
                     d.qualification,
                     d.specialization,
+                    d.consultation_fee,
 
                     h.name AS hospital_name,
                     h.address AS hospital_address
@@ -286,7 +404,14 @@ const getAppointmentById = async (req, res) => {
                   AND a.patient_id = $2
             `;
 
-            params = [appointmentId, userId];
+            params = [
+                appointmentId,
+                userId,
+            ];
+
+        // --------------------------------------------------------
+        // DOCTOR
+        // --------------------------------------------------------
 
         } else if (userRole === "DOCTOR") {
 
@@ -331,7 +456,14 @@ const getAppointmentById = async (req, res) => {
                   AND d.user_id = $2
             `;
 
-            params = [appointmentId, userId];
+            params = [
+                appointmentId,
+                userId,
+            ];
+
+        // --------------------------------------------------------
+        // ADMIN
+        // --------------------------------------------------------
 
         } else if (userRole === "ADMIN") {
 
@@ -375,7 +507,9 @@ const getAppointmentById = async (req, res) => {
                 WHERE a.id = $1
             `;
 
-            params = [appointmentId];
+            params = [
+                appointmentId,
+            ];
 
         } else {
 
@@ -385,7 +519,10 @@ const getAppointmentById = async (req, res) => {
             });
         }
 
-        const result = await pool.query(query, params);
+        const result = await pool.query(
+            query,
+            params
+        );
 
         if (result.rows.length === 0) {
             return res.status(404).json({
@@ -400,7 +537,10 @@ const getAppointmentById = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Get appointment by ID error:", error);
+        console.error(
+            "Get appointment by ID error:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
@@ -416,7 +556,8 @@ const getAppointmentById = async (req, res) => {
 
 const getDoctorAppointments = async (req, res) => {
     try {
-        const doctorUserId = req.user.userId;
+        // JWT contains "id"
+        const doctorUserId = req.user.id;
 
         const result = await pool.query(
             `
@@ -458,8 +599,8 @@ const getDoctorAppointments = async (req, res) => {
             WHERE d.user_id = $1
 
             ORDER BY
-                a.appointment_date ASC,
-                a.appointment_time ASC
+                a.appointment_date DESC,
+                a.appointment_time DESC
             `,
             [doctorUserId]
         );
@@ -471,7 +612,10 @@ const getDoctorAppointments = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("Get doctor appointments error:", error);
+        console.error(
+            "Get doctor appointments error:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
@@ -487,9 +631,15 @@ const getDoctorAppointments = async (req, res) => {
 
 const updateAppointmentStatus = async (req, res) => {
     try {
-        const doctorUserId = req.user.userId;
+        // JWT contains "id"
+        const doctorUserId = req.user.id;
+
         const { appointmentId } = req.params;
-        const { status, doctorNotes } = req.body;
+
+        const {
+            status,
+            doctorNotes,
+        } = req.body;
 
         const allowedStatuses = [
             "ACCEPTED",
@@ -498,22 +648,34 @@ const updateAppointmentStatus = async (req, res) => {
             "NO_SHOW",
         ];
 
-        if (!status || !allowedStatuses.includes(status)) {
+        // --------------------------------------------------------
+        // Validate status
+        // --------------------------------------------------------
+
+        if (!status) {
+            return res.status(400).json({
+                success: false,
+                message: "Appointment status is required",
+            });
+        }
+
+        if (!allowedStatuses.includes(status)) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid appointment status",
             });
         }
 
+        // --------------------------------------------------------
+        // Find appointment belonging to doctor
+        // --------------------------------------------------------
+
         const appointmentResult = await pool.query(
             `
             SELECT
                 a.id,
                 a.status,
-                a.doctor_id,
-                a.patient_id,
-                d.user_id
-
+                d.user_id AS doctor_user_id
             FROM appointments a
 
             JOIN doctors d
@@ -522,7 +684,10 @@ const updateAppointmentStatus = async (req, res) => {
             WHERE a.id = $1
               AND d.user_id = $2
             `,
-            [appointmentId, doctorUserId]
+            [
+                appointmentId,
+                doctorUserId,
+            ]
         );
 
         if (appointmentResult.rows.length === 0) {
@@ -532,22 +697,30 @@ const updateAppointmentStatus = async (req, res) => {
             });
         }
 
-        const appointment = appointmentResult.rows[0];
+        const currentStatus =
+            appointmentResult.rows[0].status;
 
-        const currentStatus = appointment.status;
+        // --------------------------------------------------------
+        // Valid appointment state transitions
+        // --------------------------------------------------------
 
         const validTransitions = {
             PENDING: [
                 "ACCEPTED",
                 "REJECTED",
             ],
+
             ACCEPTED: [
                 "COMPLETED",
                 "NO_SHOW",
             ],
+
             REJECTED: [],
+
             COMPLETED: [],
+
             CANCELLED: [],
+
             NO_SHOW: [],
         };
 
@@ -561,6 +734,10 @@ const updateAppointmentStatus = async (req, res) => {
                     `Cannot change appointment from ${currentStatus} to ${status}`,
             });
         }
+
+        // --------------------------------------------------------
+        // Update appointment
+        // --------------------------------------------------------
 
         const result = await pool.query(
             `
@@ -591,19 +768,6 @@ const updateAppointmentStatus = async (req, res) => {
             ]
         );
 
-        // ========================================================
-        // CREATE PATIENT NOTIFICATION WHEN APPOINTMENT IS ACCEPTED
-        // ========================================================
-
-        if (status === "ACCEPTED") {
-            await createAppointmentNotification({
-                userId: result.rows[0].patient_id,
-                appointmentId: result.rows[0].id,
-                message:
-                    "Your appointment has been accepted by the doctor.",
-            });
-        }
-
         return res.status(200).json({
             success: true,
             message:
@@ -631,6 +795,7 @@ const updateAppointmentStatus = async (req, res) => {
 
 module.exports = {
     createAppointment,
+    getDoctorAvailability,
     getMyAppointments,
     getAppointmentById,
     getDoctorAppointments,

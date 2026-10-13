@@ -1,0 +1,302 @@
+.doctor-app {
+    min-height: 100vh;
+    display: flex;
+    background: #f5f7fb;
+}
+
+
+/* ==================================================
+   SIDEBAR
+================================================== */
+
+.doctor-sidebar {
+    width: 260px;
+    min-width: 260px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-right: 1px solid #e1e6ee;
+}
+
+
+.doctor-sidebar-brand {
+    height: 103px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 25px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e8ecf2;
+}
+
+
+.doctor-brand-logo {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 31px;
+    font-weight: 700;
+}
+
+
+.doctor-brand-name {
+    color: #172033;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+
+.doctor-brand-subtitle {
+    margin-top: 2px;
+    color: #8490a3;
+    font-size: 12px;
+}
+
+
+/* ==================================================
+   NAVIGATION
+================================================== */
+
+.doctor-sidebar-navigation {
+    flex: 1;
+    padding: 28px 15px;
+}
+
+
+.doctor-sidebar-section {
+    padding: 0 17px;
+    margin-bottom: 12px;
+    color: #8a94a6;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+
+.doctor-sidebar-section-spaced {
+    margin-top: 30px;
+}
+
+
+.doctor-sidebar-link {
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 0 17px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 11px;
+    background: transparent;
+    color: #677286;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+
+.doctor-sidebar-link:hover {
+    background: #f5f8fd;
+    color: #2563eb;
+}
+
+
+.doctor-sidebar-link.active {
+    background: #edf4ff;
+    color: #2563eb;
+    font-weight: 700;
+}
+
+
+.doctor-sidebar-icon {
+    width: 23px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+}
+
+
+/* ==================================================
+   FOOTER
+================================================== */
+
+.doctor-sidebar-footer {
+    padding: 15px;
+    border-top: 1px solid #e8ecf2;
+}
+
+
+.doctor-logout {
+    color: #dc2626;
+}
+
+
+.doctor-logout:hover {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* ==================================================
+   MAIN
+================================================== */
+
+.doctor-main {
+    flex: 1;
+    min-width: 0;
+}
+
+
+.doctor-topbar {
+    height: 103px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-bottom: 1px solid #e1e6ee;
+}
+
+
+.doctor-topbar-title {
+    color: #263044;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+.doctor-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.doctor-notification-button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #e1e6ee;
+    border-radius: 9px;
+    background: #ffffff;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+
+.doctor-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.doctor-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+.doctor-user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+
+.doctor-user-info strong {
+    color: #263044;
+    font-size: 13px;
+}
+
+
+.doctor-user-info span {
+    color: #89919e;
+    font-size: 11px;
+}
+
+
+.doctor-content {
+    min-height: calc(100vh - 103px);
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 850px) {
+
+    .doctor-sidebar {
+        width: 220px;
+        min-width: 220px;
+    }
+
+    .doctor-topbar {
+        padding: 0 20px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .doctor-sidebar {
+        width: 72px;
+        min-width: 72px;
+    }
+
+    .doctor-sidebar-brand {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .doctor-brand-logo {
+        width: 42px;
+        height: 42px;
+    }
+
+    .doctor-brand-name,
+    .doctor-brand-subtitle,
+    .doctor-sidebar-section,
+    .doctor-sidebar-link span:last-child {
+        display: none;
+    }
+
+    .doctor-sidebar-link {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .doctor-sidebar-section-spaced {
+        margin-top: 20px;
+    }
+
+    .doctor-sidebar-footer {
+        padding: 10px;
+    }
+
+    .doctor-topbar-title {
+        display: none;
+    }
+
+}

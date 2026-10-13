@@ -1,16 +1,29 @@
 const express = require("express");
 
 const {
+    getAllDoctors,
     getDoctorById,
     getDoctorAvailability,
 } = require("../controllers/doctorController");
 
 const router = express.Router();
 
-// Get doctor details
+// ------------------------------------------------------------
+// GET ALL DOCTORS
+// ------------------------------------------------------------
+
+router.get("/", getAllDoctors);
+
+// ------------------------------------------------------------
+// GET DOCTOR DETAILS
+// ------------------------------------------------------------
+
 router.get("/:doctorId", getDoctorById);
 
-// Get doctor availability
+// ------------------------------------------------------------
+// GET DOCTOR AVAILABILITY
+// ------------------------------------------------------------
+
 router.get("/:doctorId/availability", getDoctorAvailability);
 
 module.exports = router;

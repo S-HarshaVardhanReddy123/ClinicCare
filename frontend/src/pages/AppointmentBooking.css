@@ -1,0 +1,741 @@
+/* =========================================================
+   CLINICCARE - APPOINTMENT BOOKING
+   ========================================================= */
+
+.appointment-booking-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+
+    padding: 32px 40px 60px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BACK
+   ========================================================= */
+
+.booking-back-button {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 11px 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #d7dee8;
+    border-radius: 10px;
+
+    color: #172033;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.booking-back-button:hover {
+    border-color: #2563eb;
+
+    color: #2563eb;
+
+    background: #f8fafc;
+}
+
+
+/* =========================================================
+   DOCTOR HEADER
+   ========================================================= */
+
+.booking-header-card {
+    display: flex;
+    align-items: center;
+
+    gap: 22px;
+
+    margin-top: 24px;
+    margin-bottom: 25px;
+
+    padding: 27px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+}
+
+.booking-doctor-avatar {
+    width: 82px;
+    height: 82px;
+    min-width: 82px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eef6ff;
+
+    border: 1px solid #dbeafe;
+
+    border-radius: 50%;
+
+    color: #2563eb;
+
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.booking-doctor-info {
+    flex: 1;
+}
+
+.booking-label {
+    margin-bottom: 6px;
+
+    color: #2563eb;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.booking-doctor-info h1 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 29px;
+}
+
+.booking-doctor-info p {
+    margin: 7px 0 12px;
+
+    color: #64748b;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.booking-fee {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.booking-fee strong {
+    color: #15803d;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.booking-section {
+    margin-bottom: 24px;
+
+    padding: 26px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+
+    box-sizing: border-box;
+}
+
+.booking-section-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 24px;
+}
+
+.booking-section-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eef6ff;
+
+    border-radius: 12px;
+
+    color: #2563eb;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+.booking-section-heading h2 {
+    margin: 0;
+
+    color: #172033;
+
+    font-size: 20px;
+}
+
+.booking-section-heading p {
+    margin: 4px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   AVAILABILITY
+   ========================================================= */
+
+.availability-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 25px;
+}
+
+.availability-day {
+    padding-bottom: 20px;
+
+    border-bottom: 1px solid #edf0f4;
+}
+
+.availability-day:last-child {
+    padding-bottom: 0;
+
+    border-bottom: none;
+}
+
+.availability-date {
+    margin-bottom: 13px;
+
+    color: #172033;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.slot-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.slot-card {
+    min-height: 112px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+    justify-content: center;
+
+    padding: 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #dbe3ed;
+
+    border-radius: 12px;
+
+    color: #172033;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.slot-card:hover {
+    border-color: #2563eb;
+
+    background: #f8fbff;
+
+    transform: translateY(-1px);
+}
+
+.slot-card.selected {
+    border: 2px solid #2563eb;
+
+    background: #eff6ff;
+
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.12);
+}
+
+.slot-time {
+    color: #172033;
+
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.slot-end-time {
+    margin-top: 3px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.slot-status {
+    margin-top: 10px;
+
+    color: #15803d;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.slot-card.selected .slot-status {
+    color: #2563eb;
+}
+
+
+/* =========================================================
+   TEXTAREA
+   ========================================================= */
+
+.booking-textarea-label {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+
+    color: #172033;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.booking-textarea-label span {
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.booking-textarea {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    box-sizing: border-box;
+
+    resize: vertical;
+
+    background: #ffffff;
+
+    border: 1px solid #d7dee8;
+    border-radius: 10px;
+
+    color: #172033;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: 0.2s ease;
+}
+
+.booking-textarea:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.booking-character-count {
+    margin-top: 6px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   CONFIRMATION
+   ========================================================= */
+
+.booking-confirm-card {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    padding: 27px;
+
+    background: #172033;
+
+    border-radius: 18px;
+
+    box-sizing: border-box;
+}
+
+.booking-confirm-info {
+    flex: 1;
+}
+
+.booking-confirm-info h2 {
+    margin: 0 0 8px;
+
+    color: #ffffff;
+
+    font-size: 22px;
+}
+
+.booking-confirm-info > p {
+    margin: 0;
+
+    color: #cbd5e1;
+
+    font-size: 14px;
+}
+
+.selected-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 16px;
+}
+
+.selected-summary > div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    padding: 11px 13px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border-radius: 9px;
+}
+
+.selected-summary span {
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.selected-summary strong {
+    color: #ffffff;
+
+    font-size: 13px;
+}
+
+.confirm-booking-button {
+    flex-shrink: 0;
+
+    padding: 14px 22px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.confirm-booking-button:hover:not(:disabled) {
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+}
+
+.confirm-booking-button:disabled {
+    background: #475569;
+
+    color: #94a3b8;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.booking-error-message {
+    margin-top: 15px;
+
+    padding: 10px 12px;
+
+    background: rgba(220, 38, 38, 0.12);
+
+    border: 1px solid rgba(248, 113, 113, 0.25);
+
+    border-radius: 8px;
+
+    color: #fecaca;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   NO SLOTS
+   ========================================================= */
+
+.no-slots {
+    padding: 45px 20px;
+
+    text-align: center;
+}
+
+.no-slots-icon {
+    width: 60px;
+    height: 60px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 15px;
+
+    background: #f8fafc;
+
+    border-radius: 16px;
+
+    color: #64748b;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.no-slots h3 {
+    margin: 0 0 8px;
+
+    color: #172033;
+
+    font-size: 19px;
+}
+
+.no-slots p {
+    margin: 0 0 20px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   PRIMARY BUTTON
+   ========================================================= */
+
+.booking-primary-button {
+    padding: 11px 19px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.booking-primary-button:hover {
+    background: #1d4ed8;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.appointment-booking-loading {
+    min-height: 550px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.booking-loading-icon {
+    width: 70px;
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    background: #eef6ff;
+
+    border-radius: 18px;
+
+    color: #2563eb;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.appointment-booking-loading h2 {
+    margin: 0 0 7px;
+
+    color: #172033;
+}
+
+.appointment-booking-loading p {
+    margin: 0;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   ERROR PAGE
+   ========================================================= */
+
+.appointment-booking-error {
+    min-height: 500px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.booking-error-icon {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    background: #fef2f2;
+
+    border-radius: 50%;
+
+    color: #dc2626;
+
+    font-size: 25px;
+    font-weight: 800;
+}
+
+.appointment-booking-error h2 {
+    margin: 0 0 8px;
+
+    color: #172033;
+}
+
+.appointment-booking-error p {
+    margin: 0 0 20px;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .appointment-booking-page {
+        padding: 25px 22px 50px;
+    }
+
+    .slot-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .appointment-booking-page {
+        padding: 20px 16px 40px;
+    }
+
+    .booking-header-card {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .booking-doctor-info h1 {
+        font-size: 25px;
+    }
+
+    .slot-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .booking-confirm-card {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .confirm-booking-button {
+        width: 100%;
+    }
+
+    .selected-summary {
+        grid-template-columns: 1fr;
+    }
+}

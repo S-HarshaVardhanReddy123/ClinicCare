@@ -7,7 +7,7 @@ const pool = require("../config/db");
 
 const getMyNotifications = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.id;
 
         const result = await pool.query(
             `
@@ -56,7 +56,7 @@ const getMyNotifications = async (req, res) => {
 
 const markNotificationAsSent = async (req, res) => {
     try {
-        const userId = req.user.userId;
+        const userId = req.user.id;
         const { notificationId } = req.params;
 
         const result = await pool.query(

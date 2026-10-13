@@ -55,3 +55,11 @@ uploads/
 # Certificates / private keys
 *.pem
 *.key
+# Local credentials and temporary investigation files
+doctors_credentials.csv
+hospital_details_current.txt
+
+# Backend local environment
+backend/.env
+backend/.env.*
+!backend/.env.example

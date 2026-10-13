@@ -1,0 +1,580 @@
+/* ============================================================
+   ADMIN DASHBOARD
+============================================================ */
+
+.admin-dashboard-page {
+    min-height: 100vh;
+    padding: 32px;
+    background: #f5f7fb;
+    color: #172033;
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   HEADER
+============================================================ */
+
+.admin-dashboard-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.admin-dashboard-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+}
+
+.admin-dashboard-header h1 {
+    margin: 0;
+    color: #111827;
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.admin-dashboard-header p {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 15px;
+}
+
+
+/* ============================================================
+   ADMIN DASHBOARD ACTIONS
+============================================================ */
+
+.admin-dashboard-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+
+/* ============================================================
+   REFRESH BUTTON
+============================================================ */
+
+.admin-refresh-button {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 18px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+    white-space: nowrap;
+}
+
+.admin-refresh-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.2);
+}
+
+.admin-refresh-button:active {
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   LOGOUT BUTTON
+============================================================ */
+
+.admin-logout-button {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 18px;
+    background: #dc2626;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+    white-space: nowrap;
+}
+
+.admin-logout-button:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.2);
+}
+
+.admin-logout-button:active {
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   MAIN STAT CARDS
+============================================================ */
+
+.admin-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.admin-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 120px;
+    padding: 22px;
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    box-sizing: border-box;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.admin-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    background: #eff6ff;
+    font-size: 25px;
+}
+
+.admin-stat-card span {
+    display: block;
+    margin-bottom: 7px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.admin-stat-card strong {
+    display: block;
+    color: #111827;
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   DASHBOARD PANELS
+============================================================ */
+
+.admin-dashboard-panel {
+    margin-bottom: 24px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #e5eaf2;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+    box-sizing: border-box;
+}
+
+.admin-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.admin-panel-header h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.admin-panel-header p {
+    margin: 5px 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* ============================================================
+   PLATFORM OVERVIEW
+============================================================ */
+
+.admin-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.admin-overview-item {
+    padding: 18px;
+    background: #f8fafc;
+    border: 1px solid #e8edf4;
+    border-radius: 12px;
+}
+
+.admin-overview-item span {
+    display: block;
+    margin-bottom: 8px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.admin-overview-item strong {
+    display: block;
+    color: #172033;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   APPOINTMENT STATUS
+============================================================ */
+
+.admin-status-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.admin-status-card {
+    padding: 20px;
+    border-radius: 13px;
+    border: 1px solid #e5e7eb;
+    background: #f8fafc;
+}
+
+.admin-status-card span {
+    display: block;
+    margin-bottom: 10px;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-status-card strong {
+    display: block;
+    color: #111827;
+    font-size: 27px;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   APPOINTMENT STATUS COLORS
+============================================================ */
+
+.admin-status-card.pending {
+    background: #fffaf0;
+    border-color: #f6d98b;
+}
+
+.admin-status-card.pending strong {
+    color: #b45309;
+}
+
+
+.admin-status-card.accepted {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.admin-status-card.accepted strong {
+    color: #2563eb;
+}
+
+
+.admin-status-card.completed {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.admin-status-card.completed strong {
+    color: #15803d;
+}
+
+
+.admin-status-card.rejected {
+    background: #fff1f2;
+    border-color: #fecdd3;
+}
+
+.admin-status-card.rejected strong {
+    color: #dc2626;
+}
+
+
+.admin-status-card.cancelled {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.admin-status-card.cancelled strong {
+    color: #64748b;
+}
+
+
+/* ============================================================
+   BOTTOM PANELS
+============================================================ */
+
+.admin-dashboard-bottom-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.admin-dashboard-bottom-grid .admin-dashboard-panel {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   SUMMARY LIST
+============================================================ */
+
+.admin-summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.admin-summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid #edf1f6;
+}
+
+.admin-summary-row:first-child {
+    padding-top: 0;
+}
+
+.admin-summary-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.admin-summary-row span {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-summary-row strong {
+    color: #111827;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   LOADING
+============================================================ */
+
+.admin-dashboard-loading {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #64748b;
+}
+
+.admin-dashboard-loading p {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.admin-loading-spinner {
+    width: 42px;
+    height: 42px;
+    border: 4px solid #dbeafe;
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: admin-dashboard-spin 0.8s linear infinite;
+}
+
+@keyframes admin-dashboard-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ============================================================
+   ERROR
+============================================================ */
+
+.admin-dashboard-error {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+}
+
+.admin-dashboard-error h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.admin-dashboard-error p {
+    margin: 10px 0 20px;
+    color: #64748b;
+    font-size: 15px;
+}
+
+
+/* ============================================================
+   TABLET
+============================================================ */
+
+@media (max-width: 1100px) {
+
+    .admin-stat-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-overview-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .admin-status-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+
+/* ============================================================
+   MOBILE
+============================================================ */
+
+@media (max-width: 760px) {
+
+    .admin-dashboard-page {
+        padding: 20px 16px;
+    }
+
+    .admin-dashboard-header {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .admin-dashboard-header h1 {
+        font-size: 26px;
+    }
+
+    .admin-dashboard-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .admin-dashboard-actions .admin-refresh-button,
+    .admin-dashboard-actions .admin-logout-button {
+        width: 100%;
+    }
+
+    .admin-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-overview-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-status-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-dashboard-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-dashboard-panel {
+        padding: 18px;
+    }
+}
+
+
+/* ============================================================
+   SMALL MOBILE
+============================================================ */
+
+@media (max-width: 480px) {
+
+    .admin-dashboard-page {
+        padding: 16px 12px;
+    }
+
+    .admin-dashboard-header h1 {
+        font-size: 23px;
+    }
+
+    .admin-dashboard-header p {
+        font-size: 14px;
+    }
+
+    .admin-stat-card {
+        min-height: 105px;
+        padding: 18px;
+    }
+
+    .admin-stat-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 21px;
+    }
+
+    .admin-stat-card strong {
+        font-size: 24px;
+    }
+
+    .admin-overview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-panel-header h2 {
+        font-size: 18px;
+    }
+
+    .admin-dashboard-error h2 {
+        font-size: 21px;
+    }
+}

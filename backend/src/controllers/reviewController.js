@@ -2,7 +2,7 @@ const pool = require("../config/db");
 
 const createReview = async (req, res) => {
     try {
-        const patientId = req.user.userId;
+        const patientId = req.user.id;
 
         const {
             appointmentId,
@@ -171,7 +171,7 @@ const createReview = async (req, res) => {
 
 const getMyReviews = async (req, res) => {
     try {
-        const patientId = req.user.userId;
+        const patientId = req.user.id;
 
         const result = await pool.query(
             `
@@ -216,7 +216,7 @@ const getMyReviews = async (req, res) => {
 const getReviewById = async (req, res) => {
     try {
         const reviewId = req.params.reviewId;
-        const userId = req.user.userId;
+        const userId = req.user.id;
         const role = req.user.role;
 
         const result = await pool.query(
