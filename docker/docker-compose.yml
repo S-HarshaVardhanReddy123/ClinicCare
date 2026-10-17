@@ -1,21 +1,57 @@
-services:
+﻿services:
   cliniccare-postgres:
     image: postgres:17-alpine
     container_name: cliniccare-postgres
     restart: unless-stopped
-
     environment:
       POSTGRES_DB: cliniccare_db
       POSTGRES_USER: cliniccare_user
       POSTGRES_PASSWORD: cliniccare_password
-
     ports:
       - "5434:5432"
-
     volumes:
       - cliniccare_postgres_data:/var/lib/postgresql/data
-      - ../database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
-      - ../database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ../database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cliniccare_user -d cliniccare_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cliniccare-backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: cliniccare-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+      DB_HOST: cliniccare-postgres
+      DB_PORT: 5432
+      DB_NAME: cliniccare_db
+      DB_USER: cliniccare_user
+      DB_PASSWORD: cliniccare_password
+      JWT_SECRET: cliniccare_development_secret_change_later
+      FRONTEND_URL: http://localhost:5175
+    ports:
+      - "5001:5001"
+    depends_on:
+      cliniccare-postgres:
+        condition: service_healthy
+
+  cliniccare-frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: cliniccare-frontend
+    restart: unless-stopped
+    ports:
+      - "5175:80"
+    depends_on:
+      - cliniccare-backend
 
 volumes:
   cliniccare_postgres_data:
+    name: cliniccare_cliniccare_postgres_data
