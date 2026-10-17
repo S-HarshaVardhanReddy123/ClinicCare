@@ -16,29 +16,25 @@ pipeline {
 
         stage('Backend Install and Tests') {
             steps {
-                dir('backend') {
-                    sh '''
-                        docker run --rm \
-                          -v "$PWD:/app" \
-                          -w /app \
-                          node:22-alpine \
-                          sh -c "npm ci && npm test"
-                    '''
-                }
+                sh '''
+                    docker run --rm \
+                      -v jenkins_home:/jenkins_home \
+                      -w "/jenkins_home${WORKSPACE#/var/jenkins_home}/backend" \
+                      node:22-alpine \
+                      sh -c "npm ci && npm test"
+                '''
             }
         }
 
         stage('Frontend Build') {
             steps {
-                dir('frontend') {
-                    sh '''
-                        docker run --rm \
-                          -v "$PWD:/app" \
-                          -w /app \
-                          node:22-alpine \
-                          sh -c "npm ci && npm run build"
-                    '''
-                }
+                sh '''
+                    docker run --rm \
+                      -v jenkins_home:/jenkins_home \
+                      -w "/jenkins_home${WORKSPACE#/var/jenkins_home}/frontend" \
+                      node:22-alpine \
+                      sh -c "npm ci && npm run build"
+                '''
             }
         }
 
