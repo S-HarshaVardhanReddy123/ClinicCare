@@ -1,42 +1,42 @@
-const request = require("supertest");
+﻿const request = require("supertest");
 
 const BASE_URL = "http://localhost:5001";
 
-let patientToken;
-let doctorToken;
-let adminToken;
+let hospitalId;
+let doctorId;
 
 describe("ClinicCare Hospital and Doctor APIs", () => {
     beforeAll(async () => {
-        const patientLogin = await request(BASE_URL)
-            .post("/api/auth/login")
-            .send({
-                email: "patient@cliniccare.com",
-                password: "Test@98765",
-            });
+        // Discover hospitals from the API instead of assuming an ID.
+        const hospitalsResponse = await request(BASE_URL)
+            .get("/api/hospitals/location/1");
 
-        patientToken = patientLogin.body.token;
+        expect(hospitalsResponse.statusCode).toBe(200);
+        expect(hospitalsResponse.body.success).toBe(true);
+        expect(hospitalsResponse.body.hospitals.length).toBeGreaterThan(0);
 
-        const doctorLogin = await request(BASE_URL)
-            .post("/api/auth/login")
-            .send({
-                email: "ananya.rao@cliniccare.demo",
-                password: "Doctor@12345",
-            });
+        // Find a hospital that actually has at least one doctor.
+        for (const hospital of hospitalsResponse.body.hospitals) {
+            const doctorsResponse = await request(BASE_URL)
+                .get(`/api/hospitals/${hospital.id}/doctors`);
 
-        doctorToken = doctorLogin.body.token;
+            if (
+                doctorsResponse.statusCode === 200 &&
+                doctorsResponse.body.success === true &&
+                Array.isArray(doctorsResponse.body.doctors) &&
+                doctorsResponse.body.doctors.length > 0
+            ) {
+                hospitalId = hospital.id;
+                doctorId = doctorsResponse.body.doctors[0].id;
+                break;
+            }
+        }
 
-        const adminLogin = await request(BASE_URL)
-            .post("/api/auth/login")
-            .send({
-                email: "admin@cliniccare.demo",
-                password: "Admin@12345",
-            });
-
-        adminToken = adminLogin.body.token;
+        expect(hospitalId).toBeDefined();
+        expect(doctorId).toBeDefined();
     });
 
-    test("GET /api/hospitals/location/:locationId should return hospitals", async () => {
+    test("Hospital listing should return hospitals", async () => {
         const response = await request(BASE_URL)
             .get("/api/hospitals/location/1");
 
@@ -46,34 +46,29 @@ describe("ClinicCare Hospital and Doctor APIs", () => {
         expect(response.body.hospitals.length).toBeGreaterThan(0);
     });
 
-    test("GET /api/hospitals/location/:locationId should include Guntur hospitals", async () => {
+    test("Hospital listing should include hospital names", async () => {
         const response = await request(BASE_URL)
             .get("/api/hospitals/location/1");
 
         expect(response.statusCode).toBe(200);
-
-        const hospitalNames = response.body.hospitals.map(
-            (hospital) => hospital.name
-        );
-
-        expect(hospitalNames.length).toBeGreaterThan(0);
+        expect(response.body.hospitals.every(
+            hospital => typeof hospital.name === "string" && hospital.name.length > 0
+        )).toBe(true);
     });
 
-    test("GET /api/hospitals/:hospitalId should return hospital details", async () => {
+    test("Hospital details should return the discovered hospital", async () => {
         const response = await request(BASE_URL)
-            .get("/api/hospitals/67");
+            .get(`/api/hospitals/${hospitalId}`);
 
         expect(response.statusCode).toBe(200);
         expect(response.body.success).toBe(true);
         expect(response.body.hospital).toBeDefined();
-
-        // PostgreSQL BIGINT values are returned as strings by node-postgres.
-        expect(response.body.hospital.id).toBe("67");
+        expect(String(response.body.hospital.id)).toBe(String(hospitalId));
     });
 
-    test("GET /api/hospitals/:hospitalId/doctors should return doctors", async () => {
+    test("Hospital should return its doctors", async () => {
         const response = await request(BASE_URL)
-            .get("/api/hospitals/67/doctors");
+            .get(`/api/hospitals/${hospitalId}/doctors`);
 
         expect(response.statusCode).toBe(200);
         expect(response.body.success).toBe(true);
@@ -81,21 +76,19 @@ describe("ClinicCare Hospital and Doctor APIs", () => {
         expect(response.body.doctors.length).toBeGreaterThan(0);
     });
 
-    test("GET /api/doctors/:doctorId should return doctor details", async () => {
+    test("Doctor details should return the discovered doctor", async () => {
         const response = await request(BASE_URL)
-            .get("/api/doctors/63");
+            .get(`/api/doctors/${doctorId}`);
 
         expect(response.statusCode).toBe(200);
         expect(response.body.success).toBe(true);
         expect(response.body.doctor).toBeDefined();
-
-        // PostgreSQL BIGINT values are returned as strings by node-postgres.
-        expect(response.body.doctor.id).toBe("63");
+        expect(String(response.body.doctor.id)).toBe(String(doctorId));
     });
 
-    test("GET /api/doctors/:doctorId/availability should return availability", async () => {
+    test("Doctor availability endpoint should return an array", async () => {
         const response = await request(BASE_URL)
-            .get("/api/doctors/63/availability");
+            .get(`/api/doctors/${doctorId}/availability`);
 
         expect(response.statusCode).toBe(200);
         expect(response.body.success).toBe(true);
@@ -104,33 +97,30 @@ describe("ClinicCare Hospital and Doctor APIs", () => {
 
     test("Hospital details should include rating information", async () => {
         const response = await request(BASE_URL)
-            .get("/api/hospitals/67");
+            .get(`/api/hospitals/${hospitalId}`);
 
         expect(response.statusCode).toBe(200);
-
-        const hospital = response.body.hospital;
-
-        expect(hospital).toHaveProperty("rating");
-        expect(hospital).toHaveProperty("review_count");
+        expect(response.body.hospital).toHaveProperty("rating");
+        expect(response.body.hospital).toHaveProperty("review_count");
     });
 
-    test("Doctor API should reject invalid doctor ID", async () => {
+    test("Invalid doctor ID should be rejected", async () => {
         const response = await request(BASE_URL)
             .get("/api/doctors/999999");
 
-        expect([404, 400]).toContain(response.statusCode);
+        expect([400, 404]).toContain(response.statusCode);
         expect(response.body.success).toBe(false);
     });
 
-    test("Hospital API should reject invalid hospital ID", async () => {
+    test("Invalid hospital ID should be rejected", async () => {
         const response = await request(BASE_URL)
             .get("/api/hospitals/999999");
 
-        expect([404, 400]).toContain(response.statusCode);
+        expect([400, 404]).toContain(response.statusCode);
         expect(response.body.success).toBe(false);
     });
 
-    test("Hospital API should work without authentication", async () => {
+    test("Hospital listing should work without authentication", async () => {
         const response = await request(BASE_URL)
             .get("/api/hospitals/location/1");
 
