@@ -1,4 +1,5 @@
-﻿pipeline {
+﻿
+pipeline {
     agent any
 
     options {
@@ -56,6 +57,8 @@
                       psql -v ON_ERROR_STOP=1 \
                       -U cliniccare_ci -d cliniccare_ci \
                       < database/seed.sql
+
+                    echo "CI database schema and seed loaded."
                 '''
             }
         }
@@ -85,14 +88,56 @@
                       node:22-alpine \
                       sh -c '
                         set -eu
+
                         npm ci
+
                         node tests/ci-setup.js
 
                         node src/server.js > /tmp/cliniccare-backend.log 2>&1 &
                         SERVER_PID=$!
+
                         trap "kill $SERVER_PID 2>/dev/null || true" EXIT
 
-                        node -e "(async()=>{for(let i=0;i<60;i++){try{const r=await fetch(\`http://127.0.0.1:5001/api/health\`);if(r.ok){const b=await r.json();if(b.success&&b.database===\`connected\`){console.log(\`Backend health check passed\`);return}}}catch(e){}await new Promise(r=>setTimeout(r,1000))}throw new Error(\`Backend did not become healthy; inspect its log\`)})().catch(e=>{console.error(e);process.exit(1)})"
+                        node -e "
+                          (async () => {
+                            for (let i = 0; i < 60; i++) {
+                              try {
+                                const response = await fetch(
+                                  '\''http://127.0.0.1:5001/api/health'\''
+                                );
+
+                                if (response.ok) {
+                                  const body = await response.json();
+
+                                  if (
+                                    body.success &&
+                                    body.database === '\''connected'\''
+                                  ) {
+                                    console.log('\''Backend health check passed'\'');
+                                    return;
+                                  }
+                                }
+                              } catch (error) {
+                                // The backend may still be starting.
+                              }
+
+                              await new Promise(resolve =>
+                                setTimeout(resolve, 1000)
+                              );
+                            }
+
+                            console.error(
+                              '\''Backend did not become healthy. Backend log:'\''
+                            );
+                            process.exit(1);
+                          })().catch(error => {
+                            console.error(error);
+                            process.exit(1);
+                          });
+                        " || {
+                          cat /tmp/cliniccare-backend.log
+                          exit 1
+                        }
 
                         npm test
                       '
