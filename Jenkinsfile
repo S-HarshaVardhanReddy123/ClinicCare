@@ -1,3 +1,4 @@
+﻿
 pipeline {
     agent any
 
@@ -32,12 +33,14 @@ pipeline {
                       postgres:17-alpine
 
                     READY=0
+
                     for attempt in $(seq 1 60); do
                         if docker exec "$CI_DB" \
                           pg_isready -U cliniccare_ci -d cliniccare_ci; then
                             READY=1
                             break
                         fi
+
                         sleep 2
                     done
 
@@ -97,45 +100,10 @@ pipeline {
 
                         trap "kill $SERVER_PID 2>/dev/null || true" EXIT
 
-                        node -e "
-                          (async () => {
-                            for (let i = 0; i < 60; i++) {
-                              try {
-                                const response = await fetch(
-                                  '\''http://127.0.0.1:5001/api/health'\''
-                                );
-
-                                if (response.ok) {
-                                  const body = await response.json();
-
-                                  if (
-                                    body.success &&
-                                    body.database === '\''connected'\''
-                                  ) {
-                                    console.log('\''Backend health check passed'\'');
-                                    return;
-                                  }
-                                }
-                              } catch (error) {
-                                // The backend may still be starting.
-                              }
-
-                              await new Promise(resolve =>
-                                setTimeout(resolve, 1000)
-                              );
-                            }
-
-                            console.error(
-                              '\''Backend did not become healthy. Backend log:'\''
-                            );
-                            process.exit(1);
-                          })().catch(error => {
-                            console.error(error);
-                            process.exit(1);
-                          });
-                        " || {
-                          cat /tmp/cliniccare-backend.log
-                          exit 1
+                        node tests/ci-health-check.js || {
+                            echo "Backend health check failed."
+                            cat /tmp/cliniccare-backend.log
+                            exit 1
                         }
 
                         npm test
@@ -162,8 +130,11 @@ pipeline {
 
         stage('Docker Image Builds') {
             steps {
-                sh 'docker build -t cliniccare-backend:ci ./backend'
-                sh 'docker build -t cliniccare-frontend:ci ./frontend'
+                sh '''
+                    set -eu
+                    docker build -t cliniccare-backend:ci ./backend
+                    docker build -t cliniccare-frontend:ci ./frontend
+                '''
             }
         }
     }
